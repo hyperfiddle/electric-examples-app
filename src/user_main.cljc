@@ -53,32 +53,32 @@
 (e/def pages
   {`user.demo-index/Secrets user.demo-index/Secrets
    `user.demo-two-clocks/TwoClocks user.demo-two-clocks/TwoClocks
-   `wip.teeshirt-orders/Webview-HFQL wip.teeshirt-orders/Webview-HFQL
-   `user.demo-explorer/DirectoryExplorer user.demo-explorer/DirectoryExplorer
-   `wip.demo-explorer2/DirectoryExplorer-HFQL wip.demo-explorer2/DirectoryExplorer-HFQL
+   ;`wip.teeshirt-orders/Webview-HFQL wip.teeshirt-orders/Webview-HFQL
+   ;`user.demo-explorer/DirectoryExplorer user.demo-explorer/DirectoryExplorer
+   ;`wip.demo-explorer2/DirectoryExplorer-HFQL wip.demo-explorer2/DirectoryExplorer-HFQL
    ;user.demo-10k-dom/Dom-10k-Elements user.demo-10k-dom/Dom-10k-Elements ; todo too slow to unmount, crashes
-   `wip.demo-branched-route/RecursiveRouter wip.demo-branched-route/RecursiveRouter
-   `wip.tag-picker/TagPicker wip.tag-picker/TagPicker
-   `user.demo-toggle/Toggle user.demo-toggle/Toggle
-   `wip.demo-custom-types/CustomTypes wip.demo-custom-types/CustomTypes
+   ;`wip.demo-branched-route/RecursiveRouter wip.demo-branched-route/RecursiveRouter
+   ;`wip.tag-picker/TagPicker wip.tag-picker/TagPicker
+   ;`user.demo-toggle/Toggle user.demo-toggle/Toggle
+   ;`wip.demo-custom-types/CustomTypes wip.demo-custom-types/CustomTypes
    `user.demo-system-properties/SystemProperties user.demo-system-properties/SystemProperties
    `user.demo-chat/Chat user.demo-chat/Chat
    `user.demo-chat-extended/ChatExtended user.demo-chat-extended/ChatExtended
-   `user.demo-webview/Webview user.demo-webview/Webview
+   ;`user.demo-webview/Webview user.demo-webview/Webview
    `user.demo-todos-simple/TodoList user.demo-todos-simple/TodoList ; css fixes
-   `user.demo-todomvc/TodoMVC user.demo-todomvc/TodoMVC
-   `user.demo-todomvc-composed/TodoMVC-composed user.demo-todomvc-composed/TodoMVC-composed
-   `user.demo-color/Color user.demo-color/Color
-   `user.demo-virtual-scroll/VirtualScroll user.demo-virtual-scroll/VirtualScroll
-   `user.tutorial-7guis-1-counter/Counter user.tutorial-7guis-1-counter/Counter
-   `user.tutorial-7guis-2-temperature/TemperatureConverter user.tutorial-7guis-2-temperature/TemperatureConverter
-   `user.tutorial-7guis-4-timer/Timer user.tutorial-7guis-4-timer/Timer
-   `user.tutorial-7guis-5-crud/CRUD user.tutorial-7guis-5-crud/CRUD
-   `user.demo-tic-tac-toe/TicTacToe user.demo-tic-tac-toe/TicTacToe
-   `user.demo-svg/SVG user.demo-svg/SVG
-   `user.tutorial-lifecycle/Lifecycle user.tutorial-lifecycle/Lifecycle
-   `wip.tracing/TracingDemo wip.tracing/TracingDemo
-   `user.demo-reagent-interop/ReagentInterop user.demo-reagent-interop/ReagentInterop
+   ;`user.demo-todomvc/TodoMVC user.demo-todomvc/TodoMVC
+   ;`user.demo-todomvc-composed/TodoMVC-composed user.demo-todomvc-composed/TodoMVC-composed
+   ;`user.demo-color/Color user.demo-color/Color
+   ;`user.demo-virtual-scroll/VirtualScroll user.demo-virtual-scroll/VirtualScroll
+   ;`user.tutorial-7guis-1-counter/Counter user.tutorial-7guis-1-counter/Counter
+   ;`user.tutorial-7guis-2-temperature/TemperatureConverter user.tutorial-7guis-2-temperature/TemperatureConverter
+   ;`user.tutorial-7guis-4-timer/Timer user.tutorial-7guis-4-timer/Timer
+   ;`user.tutorial-7guis-5-crud/CRUD user.tutorial-7guis-5-crud/CRUD
+   ;`user.demo-tic-tac-toe/TicTacToe user.demo-tic-tac-toe/TicTacToe
+   ;`user.demo-svg/SVG user.demo-svg/SVG
+   ;`user.tutorial-lifecycle/Lifecycle user.tutorial-lifecycle/Lifecycle
+   ;`wip.tracing/TracingDemo wip.tracing/TracingDemo
+   ;`user.demo-reagent-interop/ReagentInterop user.demo-reagent-interop/ReagentInterop
    ;::demos/dennis-exception-leak wip.dennis-exception-leak/App2
    ;`wip.demo-stage-ui4/CrudForm wip.demo-stage-ui4/CrudForm
    ;`wip.datomic-browser/DatomicBrowser wip.datomic-browser/DatomicBrowser
@@ -107,23 +107,25 @@
     (case ?panel
       code (Code. page) ; iframe url for just code
       app (App. page) ; iframe url for just app
-      (do
-        (dom/link (dom/props {:rel :stylesheet, :href "/user/examples.css"}))
-        #_(dom/pre (dom/text (contrib.str/pprint-str history/route))) ; debug
-
-        (dom/div (dom/props {:class "user-examples"})
-          (dom/h1 (dom/text (name page) " — Electric Clojure tutorial"))
-          (dom/fieldset (dom/legend (dom/text "Result"))
-            (dom/props {:class ["user-examples-target" (name page)]})
-            (App. page))
-          (dom/fieldset (dom/legend (dom/text "Code"))
-            (dom/props {:class "user-examples-code"})
-            (Code. (e/server (get-src page))))
-          (dom/div (dom/props {:class "user-examples-readme"})
-            (let [html (e/server (some-> (get-readme page) clarktown.core/render))]
-              (set! (.-innerHTML dom/node) html)))
-          (dom/div (dom/props {:class "user-examples-nav"})
-            (user.demo-index/Demos.)))))))
+      (dom/div
+       (dom/props {:class "user-examples"})
+       
+       (dom/h1 (dom/text #_(name page) "Electric Clojure tutorial"))
+       (dom/select
+        (dom/option (dom/props {:value "two-clocks"})
+                    (dom/text "Two Clocks")))
+       (dom/fieldset (dom/legend (dom/text "Result"))
+                     (dom/props {:class ["user-examples-target" (name page)]})
+                     (App. page))
+       (dom/fieldset (dom/legend (dom/text "Code"))
+                     (dom/props {:class "user-examples-code"})
+                     (dom/pre (dom/text (e/server (get-src page))))
+                     #_(Code. (e/server (get-src page))))
+       (dom/div (dom/props {:class "user-examples-readme"})
+                (let [html (e/server (some-> (get-readme `user.demo-two-clocks/TwoClocks) clarktown.core/render))]
+                  (set! (.-innerHTML dom/node) html)))
+       #_(dom/div (dom/props {:class "user-examples-nav"})
+                (user.demo-index/Demos.))))))
 
 (defn route->path [x] (->> x (map contrib.ednish/encode-uri) (interpose "/") (apply str)))
 (defn path->route [s]
