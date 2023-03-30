@@ -15,3 +15,5 @@ shadow-cljs - nREPL server started on port 9001
 
 👉 App server available at http://0.0.0.0:8080
 ```
+
+* electric CSS is being loaded from resource path via electric jar, todo fix uberjar

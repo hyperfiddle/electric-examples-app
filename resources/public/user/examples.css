@@ -1,19 +1,57 @@
-body.hyperfiddle {}
+html {
+    padding: 0; margin: 0; 
+}
 
-:root {
-    --desktop-min-width: calc(50em + 3*12em);
+body.hyperfiddle { 
+    font-size: 32px; /* mobile */
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+    /* line-height: 1.5em; */
+
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+
+    /* body is root of viewport */
+    padding: 0; margin: 0; height: 100vh; width: 100vw; overflow: auto;
+    
+    position: relative;
+    /* border: blue 1px solid; */ /* bugged */
+    /* background-color: red; */
+}
+
+.user-examples > select {
+    font-size: 3rem; 
+    padding: .5rem;
 }
 
 .user-examples {
+    /* border:red 1px solid; */ /* bugged */
     padding: 0;
     margin: 0;
+    display: grid;
+    grid-template-rows: auto auto auto 1fr auto;
+    height: 100%;
+    max-height: 100%;
+    gap: 1.5rem;
+    position: relative;
+
 }
 
-@media screen and (min-width: calc(50em + 3*12em)) { /* var(--desktop-min-width) */
+.user-examples-code > pre { 
+    white-space: pre-wrap; 
+    overflow-y: hidden;
+    height: 400px; /* todo fix */
+}
+
+.user-examples-target {
+    max-height: 20%;
+}
+.user-examples > div.user-examples-nav { display:none; }
+
+/* @media screen and (min-width: calc(50em + 3*12em)) {
     .user-examples {
         display: grid;
-        grid-template-columns: 12em 50em /* 80 cols mono? */ 1fr;
-        /*grid-template-rows: 1fr min-content;*/
+        grid-template-columns: 12em 50em 1fr;
         grid-template-areas:
                 "user-sidebar user-title user-title"
                 "user-sidebar user-result user-code"
@@ -22,17 +60,14 @@ body.hyperfiddle {}
 
     .user-examples > fieldset:nth-child(1) { grid-area: user-result; }
     .user-examples > fieldset:nth-child(2) { grid-area: user-code; }
-    .user-examples > div.user-examples-nav { grid-area: user-sidebar; }
+    .user-examples > div.user-examples-nav { grid-area: user-sidebar; display:none; }
     .user-examples > div.user-examples-readme { grid-area: user-readme; }
     .user-examples > h1 { grid-area: user-title; }
-
-    /*https://stackoverflow.com/questions/52785750/prevent-grid-area-from-expanding-causing-whole-page-to-scroll*/
-    /*https://stackoverflow.com/a/45897789/20003*/
-}
+} */
 
 .user-examples .cm-editor,
 .user-examples fieldset.user-examples-code {
-    background-color: white; /* fieldset should match cm */
+    background-color: white; 
     /*padding-left: 0; padding-right: 0; -- cm gutters are the only desired padding, but
     unfortunately the fieldset>legend needs this padding */
 }
