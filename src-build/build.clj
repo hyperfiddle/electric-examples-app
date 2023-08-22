@@ -24,7 +24,7 @@
   ; this command must run the same on: local machine, docker build, github actions.
   ; shell out to let Shadow manage the classpath, it's not obvious how to set that up.
   ; This is the only stable way we know to do it.
-  (let [command (->> ["clj" "-M:shadow-cljs" "release" "prod"
+  (let [command (->> ["clj" "-J-Xss4M" "-M:shadow-cljs" "release" "prod"
                       (when debug "--debug")
                       (when verbose "--verbose")
                       "--config-merge"
