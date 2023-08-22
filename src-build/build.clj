@@ -33,9 +33,11 @@
                   (remove nil?))]
     (apply println "Running:" command)
     (let [{:keys [exit out err]} (apply sh/sh command)]
-      (when-not (zero? exit)  (println "Exit code" exit))
       (when err (println err))
-      (when out (println out)))))
+      (when out (println out))
+      (when-not (zero? exit)
+        (println "Exit code" exit)
+        (System/exit exit)))))
 
 (defn uberjar [{:keys [jar-name version optimize debug verbose]
                 :or   {version version, optimize true, debug false, verbose false}}]
