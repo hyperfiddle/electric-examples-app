@@ -61,7 +61,7 @@
    `user.demo-webview/Webview user.demo-webview/Webview
    `user.demo-todos-simple/TodoList user.demo-todos-simple/TodoList
    `user.demo-reagent-interop/ReagentInterop user.demo-reagent-interop/ReagentInterop
-   `wip.demo-stage-ui4/CrudForm wip.demo-stage-ui4/CrudForm
+   ;; `wip.demo-stage-ui4/CrudForm wip.demo-stage-ui4/CrudForm
    `user.demo-svg/SVG user.demo-svg/SVG
    ; -- `wip.tracing/TracingDemo wip.tracing/TracingDemo
    `wip.demo-custom-types/CustomTypes wip.demo-custom-types/CustomTypes
@@ -73,9 +73,9 @@
    `user.tutorial-7guis-5-crud/CRUD user.tutorial-7guis-5-crud/CRUD
 
    ; Demos
-   `user.demo-todomvc/TodoMVC user.demo-todomvc/TodoMVC
-   `user.demo-todomvc-composed/TodoMVC-composed user.demo-todomvc-composed/TodoMVC-composed
-   `user.demo-explorer/DirectoryExplorer user.demo-explorer/DirectoryExplorer
+   ;; `user.demo-todomvc/TodoMVC user.demo-todomvc/TodoMVC
+   ;; `user.demo-todomvc-composed/TodoMVC-composed user.demo-todomvc-composed/TodoMVC-composed
+   ;; `user.demo-explorer/DirectoryExplorer user.demo-explorer/DirectoryExplorer
    ;-- `wip.datomic-browser/DatomicBrowser wip.datomic-browser/DatomicBrowser -- separate repo now, should it come back?
    ; `user.demo-color/Color user.demo-color/Color
    ; -- user.demo-10k-dom/Dom-10k-Elements user.demo-10k-dom/Dom-10k-Elements ; todo too slow to unmount, crashes
