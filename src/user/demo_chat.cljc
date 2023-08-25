@@ -20,10 +20,10 @@
                 (dom/text msg))))))
 
       (dom/input
-        (dom/props {:placeholder "Type a message"})
+        (dom/props {:placeholder "Type a message" :maxlength 100})
         (dom/on "keydown" (e/fn [e]
                             (when (= "Enter" (.-key e))
-                              (when-some [v (empty->nil (.. e -target -value))]
+                              (when-some [v (empty->nil (.substr (.. e -target -value) 0 100))]
                                 (e/server (swap! !msgs #(cons v (take 9 %))))
                                 (set! (.-value dom/node) ""))))))
       (catch Pending e
