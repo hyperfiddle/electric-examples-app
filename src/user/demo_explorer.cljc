@@ -2,9 +2,9 @@
   (:require [clojure.datafy :refer [datafy]]
             [clojure.core.protocols :refer [nav]]
             #?(:clj clojure.java.io)
+            [clojure.string :as str]
             [contrib.data :refer [treelister]]
             [contrib.datafy-fs #?(:clj :as :cljs :as-alias) fs]
-            contrib.str
             [hyperfiddle.electric :as e]
             [hyperfiddle.electric-dom2 :as dom]
             [hyperfiddle.history :as router]
@@ -31,7 +31,8 @@
         xs (nav m ::fs/children (::fs/children m))]
     (e/client (dom/div (dom/text (e/server (::fs/absolute-path m)))))
     (Explorer.
-      (treelister xs ::fs/children #(contrib.str/includes-str? (::fs/name %) %2))
+      (treelister xs ::fs/children #(str/includes? (str/lower-case (::fs/name %))
+                                      (str/lower-case (str %2))))
       {::dom/style {:height "calc((20 + 1) * 24px)"}
        ::gridsheet/page-size 20
        ::gridsheet/row-height 24
