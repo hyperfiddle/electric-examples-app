@@ -34,29 +34,31 @@
        (or 0)))) ; datascript can return nil wtf
 
 (e/defn Filter-control [state target label]
-  (dom/a (dom/props {:class (when (= state target) "selected")})
-    (dom/text label)
-    (dom/on "click" (e/fn [_] (swap! !state assoc ::filter target)))))
+  (e/client
+    (dom/a (dom/props {:class (when (= state target) "selected")})
+      (dom/text label)
+      (dom/on "click" (e/fn [_] (swap! !state assoc ::filter target))))))
 
 
 (e/defn TodoStats [state]
-  (let [active (e/server (todo-count db :active))
-        done   (e/server (todo-count db :done))]
-    (dom/div
-      (dom/span (dom/props {:class "todo-count"})
-        (dom/strong (dom/text active))
-        (dom/span (dom/text " " (str (case active 1 "item" "items")) " left")))
+  (e/client
+    (let [active (e/server (todo-count db :active))
+          done   (e/server (todo-count db :done))]
+      (dom/div
+        (dom/span (dom/props {:class "todo-count"})
+          (dom/strong (dom/text active))
+          (dom/span (dom/text " " (str (case active 1 "item" "items")) " left")))
 
-      (dom/ul (dom/props {:class "filters"})
-        (dom/li (Filter-control. (::filter state) :all "All"))
-        (dom/li (Filter-control. (::filter state) :active "Active"))
-        (dom/li (Filter-control. (::filter state) :done "Completed")))
+        (dom/ul (dom/props {:class "filters"})
+          (dom/li (Filter-control. (::filter state) :all "All"))
+          (dom/li (Filter-control. (::filter state) :active "Active"))
+          (dom/li (Filter-control. (::filter state) :done "Completed")))
 
-      (when (pos? done)
-        (ui/button (e/fn [] (e/server (when-some [ids (seq (query-todos db :done))]
-                                        (transact! (mapv (fn [id] [:db/retractEntity id]) ids)) nil)))
-          (dom/props {:class "clear-completed"})
-          (dom/text "Clear completed " done))))))
+        (when (pos? done)
+          (ui/button (e/fn [] (e/server (when-some [ids (seq (query-todos db :done))]
+                                          (transact! (mapv (fn [id] [:db/retractEntity id]) ids)) nil)))
+            (dom/props {:class "clear-completed"})
+            (dom/text "Clear completed " done)))))))
 
 (e/defn TodoItem [state id]
   (e/server
@@ -115,42 +117,46 @@
             (TodoItem. state id)))))))
 
 (e/defn CreateTodo []
-  (dom/span (dom/props {:class "input-load-mask"})
-    (dom/on-pending (dom/props {:aria-busy true})
-      (dom/input
-        (dom/on "keydown"
-          (e/fn [e]
-            (when (= "Enter" (.-key e))
-              (when-some [description (contrib.str/empty->nil (-> e .-target .-value))]
-                (e/server (transact! [{:task/description description, :task/status :active}]) nil)
-                (set! (.-value dom/node) "")))))
-        (dom/props {:class "new-todo", :placeholder "What needs to be done?"})))))
+  (e/client
+    (dom/span (dom/props {:class "input-load-mask"})
+      (dom/on-pending (dom/props {:aria-busy true})
+        (dom/input
+          (dom/on "keydown"
+            (e/fn [e]
+              (when (= "Enter" (.-key e))
+                (when-some [description (contrib.str/empty->nil (-> e .-target .-value))]
+                  (e/server (transact! [{:task/description description, :task/status :active}]) nil)
+                  (set! (.-value dom/node) "")))))
+          (dom/props {:class "new-todo", :placeholder "What needs to be done?"}))))))
 
 (e/defn TodoMVC-UI [state]
-  (dom/section (dom/props {:class "todoapp"})
-    (dom/header (dom/props {:class "header"})
-      (CreateTodo.))
-    (when (e/server (pos? (todo-count db :all)))
-      (TodoList. state))
-    (dom/footer (dom/props {:class "footer"})
-      (TodoStats. state))))
+  (e/client
+    (dom/section (dom/props {:class "todoapp"})
+      (dom/header (dom/props {:class "header"})
+        (CreateTodo.))
+      (when (e/server (pos? (todo-count db :all)))
+        (TodoList. state))
+      (dom/footer (dom/props {:class "footer"})
+        (TodoStats. state)))))
 
 (e/defn TodoMVC-body [state]
-  (dom/div (dom/props {:class "todomvc"})
-    (TodoMVC-UI. state)
-    (dom/footer (dom/props {:class "info"})
-      (dom/p (dom/text "Double-click to edit a todo")))))
+  (e/client
+    (dom/div (dom/props {:class "todomvc"})
+      (TodoMVC-UI. state)
+      (dom/footer (dom/props {:class "info"})
+        (dom/p (dom/text "Double-click to edit a todo"))))))
 
 (e/defn Diagnostics [state]
-  (dom/h1 (dom/text "Diagnostics"))
-  (dom/dl
-    (dom/dt (dom/text "count :all")) (dom/dd (dom/text (pr-str (e/server (todo-count db :all)))))
-    (dom/dt (dom/text "query :all")) (dom/dd (dom/text (pr-str (e/server (query-todos db :all)))))
-    (dom/dt (dom/text "state")) (dom/dd (dom/text (pr-str state)))
-    (dom/dt (dom/text "delay")) (dom/dd
-                                  (ui/long (::delay state) (e/fn [v] (swap! !state assoc ::delay v))
-                                    (dom/props {:step 1, :min 0, :style {:width :min-content}}))
-                                  (dom/text " ms"))))
+  (e/client
+    (dom/h1 (dom/text "Diagnostics"))
+    (dom/dl
+      (dom/dt (dom/text "count :all")) (dom/dd (dom/text (pr-str (e/server (todo-count db :all)))))
+      (dom/dt (dom/text "query :all")) (dom/dd (dom/text (pr-str (e/server (query-todos db :all)))))
+      (dom/dt (dom/text "state")) (dom/dd (dom/text (pr-str state)))
+      (dom/dt (dom/text "delay")) (dom/dd
+                                    (ui/long (::delay state) (e/fn [v] (swap! !state assoc ::delay v))
+                                      (dom/props {:step 1, :min 0, :style {:width :min-content}}))
+                                    (dom/text " ms")))))
 
 #?(:clj
    (defn slow-transact! [!conn delay tx]

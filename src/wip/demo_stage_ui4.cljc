@@ -39,53 +39,54 @@
 
 
 (e/defn Form [e]
-  (let [record (d/pull hf/db label-form-spec e)]
-    (e/client
-      (dom/dl
+  (e/server
+    (let [record (d/pull hf/db label-form-spec e)]
+      (e/client
+        (dom/dl
 
-        (dom/dt (dom/text "id"))
-        (dom/dd 
-          (ui/input (:db/id record) nil
-            (dom/props {::dom/disabled true})))
+          (dom/dt (dom/text "id"))
+          (dom/dd
+            (ui/input (:db/id record) nil
+              (dom/props {::dom/disabled true})))
 
-        (dom/dt "gid")
-        (dom/dd (ui/uuid (:label/gid record) nil
-                  (dom/props {::dom/disabled true})))
+          (dom/dt "gid")
+          (dom/dd (ui/uuid (:label/gid record) nil
+                    (dom/props {::dom/disabled true})))
 
-        (dom/dt (dom/text "name"))
-        (dom/dd (ui/input (:label/name record)
-                  (e/fn [v]
-                    (println 'input! v)
-                    (e/server
-                      (hf/Transact!. [[:db/add e :label/name v]])))))
+          (dom/dt (dom/text "name"))
+          (dom/dd (ui/input (:label/name record)
+                    (e/fn [v]
+                      (println 'input! v)
+                      (e/server
+                        (hf/Transact!. [[:db/add e :label/name v]])))))
 
-        (dom/dt (dom/text "sortName"))
-        (dom/dd (ui/input (:label/sortName record)
-                  (e/fn [v]
-                    (e/server
-                      (hf/Transact!. [[:db/add e :label/sortName v]])))))
+          (dom/dt (dom/text "sortName"))
+          (dom/dd (ui/input (:label/sortName record)
+                    (e/fn [v]
+                      (e/server
+                        (hf/Transact!. [[:db/add e :label/sortName v]])))))
 
 
-        (dom/dt (dom/text "type"))
-        (dom/dd
-          (e/server
-            (ui/typeahead
-              (:label/type record)
-              (e/fn V! [option]
-                (hf/Transact!. [[:db/add e :label/type (:db/ident option)]]))
-              (e/fn Options [search] (type-options hf/db search))
-              (e/fn OptionLabel [option] (some-> option :db/ident name)))))
+          (dom/dt (dom/text "type"))
+          (dom/dd
+            (e/server
+              (ui/typeahead
+                (:label/type record)
+                (e/fn V! [option]
+                  (hf/Transact!. [[:db/add e :label/type (:db/ident option)]]))
+                (e/fn Options [search] (type-options hf/db search))
+                (e/fn OptionLabel [option] (some-> option :db/ident name)))))
 
-        ; country
+                                        ; country
 
-        (dom/dt (dom/text "startYear"))
-        (dom/dd (ui/long
-                  (:label/startYear record)
-                  (e/fn [v]
-                    (e/server
-                      (hf/Transact!. [[:db/add e :label/startYear v]]))))))
+          (dom/dt (dom/text "startYear"))
+          (dom/dd (ui/long
+                    (:label/startYear record)
+                    (e/fn [v]
+                      (e/server
+                        (hf/Transact!. [[:db/add e :label/startYear v]]))))))
 
-      (dom/pre (dom/text (pprint-str record))))))
+        (dom/pre (dom/text (pprint-str record)))))))
 
 (e/defn Page []
   #_(e/client (dom/div (if hf/loading "loading" "idle") " " 

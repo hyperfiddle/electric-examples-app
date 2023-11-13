@@ -8,14 +8,15 @@
 #?(:clj (def !n (atom 1)))
 
 (e/defn PopoverCascaded [i F]
-  (let [!focused (atom false) focused (e/watch !focused)]
-    (dom/div (dom/props {:style {:position "absolute"
-                                 :left (str (* i 40) "px")
-                                 :top (str (-> i (* 40) (+ 60)) "px")
-                                 :z-index (+ i (if focused 1000 0))}})
-      (dom/on "mouseenter" (e/fn [_] (reset! !focused true)))
-      (dom/on "mouseleave" (e/fn [_] (reset! !focused false)))
-      (F.))))
+  (e/client
+    (let [!focused (atom false) focused (e/watch !focused)]
+      (dom/div (dom/props {:style {:position "absolute"
+                                   :left (str (* i 40) "px")
+                                   :top (str (-> i (* 40) (+ 60)) "px")
+                                   :z-index (+ i (if focused 1000 0))}})
+        (dom/on "mouseenter" (e/fn [_] (reset! !focused true)))
+        (dom/on "mouseleave" (e/fn [_] (reset! !focused false)))
+        (F.)))))
 
 (e/defn TodoMVC-composed []
   (e/client

@@ -34,15 +34,16 @@
 (defn saturation->chroma [saturation] (* 0.158 (/ saturation 100)))
 
 (e/defn Tile [color]
-  (dom/div (dom/props {:style {:display          :flex
-                               :align-items      :center
-                               :justify-content  :center
-                               :color            :white
-                               :background-color (format-rgb color)
-                               :width            "100px"
-                               :height           "100%"
-                               }})
-    (dom/text "Contrast")))
+  (e/client
+    (dom/div (dom/props {:style {:display          :flex
+                                 :align-items      :center
+                                 :justify-content  :center
+                                 :color            :white
+                                 :background-color (format-rgb color)
+                                 :width            "100px"
+                                 :height           "100%"
+                                 }})
+      (dom/text "Contrast"))))
 
 (e/defn Color []
   (e/client

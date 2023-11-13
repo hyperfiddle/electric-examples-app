@@ -17,19 +17,21 @@
       (str n))))
 
 (e/defn CodeFor [sym height]
-  (ui/edn (e/server (nth (:hyperfiddle.electric.impl.compiler/node (meta (eval `(var ~sym)))) 3))
-    (e/fn [_])
-    (dom/props {:disabled true})
-    (dom/style {:display "block" :width "50em", :height height})))
+  (e/client
+    (ui/edn (e/server (nth (:hyperfiddle.electric.impl.compiler/node (meta (eval `(var ~sym)))) 3))
+      (e/fn [_])
+      (dom/props {:disabled true})
+      (dom/style {:display "block" :width "50em", :height height}))))
 
 (e/defn FizzBuzz []
-  (dom/div
-    (dom/h2 (dom/text "an over-engineered fizzbuzz"))
-    (CodeFor. `FizzBuzzText "22em")
-    (dom/br)
-    (let [!n (atom 0), n (e/watch !n)]
-      (ui/long n (e/fn [v] (reset! !n v)) (dom/style {:width "8em"}))
-      (dom/span (dom/text (FizzBuzzText. n))))))
+  (e/client
+    (dom/div
+      (dom/h2 (dom/text "an over-engineered fizzbuzz"))
+      (CodeFor. `FizzBuzzText "22em")
+      (dom/br)
+      (let [!n (atom 0), n (e/watch !n)]
+        (ui/long n (e/fn [v] (reset! !n v)) (dom/style {:width "8em"}))
+        (dom/span (dom/text (FizzBuzzText. n)))))))
 
 (e/defn ExceptionOrValue [n]
   (ct/trace :result
@@ -37,14 +39,15 @@
      (ct/trace :triple (* n 3))]))
 
 (e/defn Exceptions []
-  (dom/div
-    (dom/h2 (dom/text "exceptions and concurrency"))
-    (CodeFor. `ExceptionOrValue "8em")
-    (let [!n (atom 0), n (e/watch !n)]
-      (ui/long n (e/fn [v] (reset! !n v)) (dom/style {:width "8em"}))
-      (ExceptionOrValue. n))))
+  (e/client
+    (dom/div
+      (dom/h2 (dom/text "exceptions and concurrency"))
+      (CodeFor. `ExceptionOrValue "8em")
+      (let [!n (atom 0), n (e/watch !n)]
+        (ui/long n (e/fn [v] (reset! !n v)) (dom/style {:width "8em"}))
+        (ExceptionOrValue. n)))))
 
-(e/defn Note [text] (dom/em (dom/style {:display "block"}) (dom/text text)))
+(e/defn Note [text] (e/client (dom/em (dom/style {:display "block"}) (dom/text text))))
 
 (e/defn TracingDemo []
   (e/client
