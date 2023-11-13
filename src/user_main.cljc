@@ -122,17 +122,19 @@
   (get-readme `user.demo-two-clocks/TwoClocks))
 
 (e/defn Code [page]
-  (dom/fieldset
-    (dom/props {:class "user-examples-code"})
-    (dom/legend (dom/text "Code"))
-    #_(dom/pre (dom/text (e/server (get-src page))))
-    (CodeMirror. {:parent dom/node :readonly true} identity identity (e/server (get-src page)))))
+  (e/client
+    (dom/fieldset
+      (dom/props {:class "user-examples-code"})
+      (dom/legend (dom/text "Code"))
+      #_(dom/pre (dom/text (e/server (get-src page))))
+      (CodeMirror. {:parent dom/node :readonly true} identity identity (e/server (get-src page))))))
 
 (e/defn App [page]
-  (dom/fieldset
-    (dom/props {:class ["user-examples-target" (some-> page name)]})
-   (dom/legend (dom/text "Result"))
-   (e/server (new (get pages page NotFoundPage)))))
+  (e/client
+    (dom/fieldset
+      (dom/props {:class ["user-examples-target" (some-> page name)]})
+      (dom/legend (dom/text "Result"))
+      (e/server (new (get pages page NotFoundPage))))))
 
 (e/defn Markdown [?md-str]
   (e/client
@@ -140,9 +142,10 @@
      (set! (.-innerHTML dom/node) html))))
 
 (e/defn Readme [page]
-  (dom/div
-    (dom/props {:class "user-examples-readme markdown-body"})
-    (e/server (Markdown. (get-readme page)))))
+  (e/client
+    (dom/div
+      (dom/props {:class "user-examples-readme markdown-body"})
+      (e/server (Markdown. (get-readme page))))))
 
 (def tutorials
   [["Electric" 
@@ -205,50 +208,52 @@
 (defn title [{:keys [::id ::title]}] (or title (name id)))
 
 (e/defn Nav [page footer?]
-  (let [[prev next] (get-prev-next page)]
-    (dom/div {} (dom/props {:class [(if footer? "user-examples-footer-nav" "user-examples-nav")
-                                    (when-not prev "user-examples-nav-start")
-                                    (when-not next "user-examples-nav-end")]})
-      (when prev
-        (history/link [(::id prev)] (dom/props {:class "user-examples-nav-prev"}) (dom/text (str "< " (title prev)))))
-      (dom/div (dom/props {:class "user-examples-select"})
-        (svg/svg (dom/props {:viewBox "0 0 20 20"})
-          (svg/path (dom/props {:d "M19 4a1 1 0 01-1 1H2a1 1 0 010-2h16a1 1 0 011 1zm0 6a1 1 0 01-1 1H2a1 1 0 110-2h16a1 1 0 011 1zm-1 7a1 1 0 100-2H2a1 1 0 100 2h16z"})))
-        (dom/select
-          (e/for [[group-label entries] tutorials]
-            (dom/optgroup (dom/props {:label group-label})
-              (e/for [{:keys [::id]} entries]
-                (let [entry (tutorials-index id)]
-                  (dom/option
-                    (dom/props {:value (str id) :selected (= page id)})
-                    (dom/text (str (inc (::order entry)) ". " (title entry))))))))
-          (dom/on "change" (e/fn [^js e]
-                             (history/navigate! history/!history [(clojure.edn/read-string (.. e -target -value))])))))
-      (when next
-        (history/link [(::id next)] (dom/props {:class "user-examples-nav-next"}) (dom/text (str (title next) " >")))))))
+  (e/client
+    (let [[prev next] (get-prev-next page)]
+      (dom/div {} (dom/props {:class [(if footer? "user-examples-footer-nav" "user-examples-nav")
+                                      (when-not prev "user-examples-nav-start")
+                                      (when-not next "user-examples-nav-end")]})
+        (when prev
+          (history/link [(::id prev)] (dom/props {:class "user-examples-nav-prev"}) (dom/text (str "< " (title prev)))))
+        (dom/div (dom/props {:class "user-examples-select"})
+          (svg/svg (dom/props {:viewBox "0 0 20 20"})
+            (svg/path (dom/props {:d "M19 4a1 1 0 01-1 1H2a1 1 0 010-2h16a1 1 0 011 1zm0 6a1 1 0 01-1 1H2a1 1 0 110-2h16a1 1 0 011 1zm-1 7a1 1 0 100-2H2a1 1 0 100 2h16z"})))
+          (dom/select
+            (e/for [[group-label entries] tutorials]
+              (dom/optgroup (dom/props {:label group-label})
+                (e/for [{:keys [::id]} entries]
+                  (let [entry (tutorials-index id)]
+                    (dom/option
+                      (dom/props {:value (str id) :selected (= page id)})
+                      (dom/text (str (inc (::order entry)) ". " (title entry))))))))
+            (dom/on "change" (e/fn [^js e]
+                               (history/navigate! history/!history [(clojure.edn/read-string (.. e -target -value))])))))
+        (when next
+          (history/link [(::id next)] (dom/props {:class "user-examples-nav-next"}) (dom/text (str (title next) " >"))))))))
 
 (e/defn Examples []
-  (let [[page & [?panel]] history/route
-        suppress-code? (::suppress-code (get tutorials-index page))
-        suppress-demo? (::suppress-demo (get tutorials-index page))]
-    (case ?panel
-      code (Code. page) ; iframe url for just code
-      app (history/router 1 (App. page)) ; iframe url for just app
-      (do
-        (when suppress-code?
-          (.. dom/node -classList (add "user-examples-demo"))
-          (e/on-unmount #(.. dom/node -classList (remove "user-examples-demo"))))
-        (dom/h1 (dom/text "Tutorial – Electric Clojure")) 
-        (Nav. page false)
-        (dom/div (dom/props {:class "user-examples-lead"}) 
-          (e/server (Markdown. (::lead (get tutorials-index page)))))
-        (when-not suppress-demo?
-          (history/router 1 ; focus route slot 1 to store state: `[page <state>]
-            (App. page)))
-        (when-not suppress-code?
-          (Code. page))
-        (Readme. page)
-        (Nav. page true)))))
+  (e/client
+    (let [[page & [?panel]] history/route
+          suppress-code? (::suppress-code (get tutorials-index page))
+          suppress-demo? (::suppress-demo (get tutorials-index page))]
+      (case ?panel
+        code (Code. page)                 ; iframe url for just code
+        app (history/router 1 (App. page)) ; iframe url for just app
+        (do
+          (when suppress-code?
+            (.. dom/node -classList (add "user-examples-demo"))
+            (e/on-unmount #(.. dom/node -classList (remove "user-examples-demo"))))
+          (dom/h1 (dom/text "Tutorial – Electric Clojure"))
+          (Nav. page false)
+          (dom/div (dom/props {:class "user-examples-lead"})
+            (e/server (Markdown. (::lead (get tutorials-index page)))))
+          (when-not suppress-demo?
+            (history/router 1 ; focus route slot 1 to store state: `[page <state>]
+              (App. page)))
+          (when-not suppress-code?
+            (Code. page))
+          (Readme. page)
+          (Nav. page true))))))
 
 (defn route->path [route] (clojure.string/join "/" (map contrib.ednish/encode-uri route)))
 (defn path->route [s]
@@ -270,9 +275,10 @@
   )
 
 (e/defn Main []
-  (binding [history/encode route->path
-            history/decode #(or (path->route %) [`user.demo-two-clocks/TwoClocks])]
-    (history/router (history/HTML5-History.)
-      (set! (.-title js/document) (str #_(clojure.string/capitalize) (some-> (identity history/route) first name) " – Electric Clojure"))
-      (binding [dom/node js/document.body]
-        (Examples.)))))
+  (e/client
+    (binding [history/encode route->path
+              history/decode #(or (path->route %) [`user.demo-two-clocks/TwoClocks])]
+      (history/router (history/HTML5-History.)
+        (set! (.-title js/document) (str #_(clojure.string/capitalize) (some-> (identity history/route) first name) " – Electric Clojure"))
+        (binding [dom/node js/document.body]
+            (Examples.))))))

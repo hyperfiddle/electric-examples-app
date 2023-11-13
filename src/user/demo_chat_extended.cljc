@@ -10,31 +10,32 @@
 (e/def present (e/server (e/watch !present)))
 
 (e/defn Chat-UI [username]
-  (dom/div (dom/text "Present: "))
-  (dom/ul
-    (e/server
-      (e/for-by first [[session-id username] present]
-        (e/client
-          (dom/li (dom/text username (str " (session-id: " session-id ")")))))))
+  (e/client
+    (dom/div (dom/text "Present: "))
+    (dom/ul
+      (e/server
+        (e/for-by first [[session-id username] present]
+          (e/client
+            (dom/li (dom/text username (str " (session-id: " session-id ")")))))))
 
-  (dom/hr)
-  (dom/ul
-    (e/server
-      (e/for [{:keys [::username ::msg]} msgs]
-        (e/client
-          (dom/li (dom/strong (dom/text username))
-            (dom/text " " msg))))))
+    (dom/hr)
+    (dom/ul
+      (e/server
+        (e/for [{:keys [::username ::msg]} msgs]
+          (e/client
+            (dom/li (dom/strong (dom/text username))
+              (dom/text " " msg))))))
 
-  (dom/input
-    (dom/props {:placeholder "Type a message" :maxlength 100})
-    (dom/on "keydown" (e/fn [e]
-                        (when (= "Enter" (.-key e))
-                          (when-some [v (empty->nil (.substr (.. e -target -value) 0 100))]
-                            (dom/style {:background-color "yellow"}) ; loading
-                            (e/server 
-                              (swap! !msgs #(cons {::username username ::msg v} 
-                                                  (take 9 %))))
-                            (set! (.-value dom/node) "")))))))
+    (dom/input
+      (dom/props {:placeholder "Type a message" :maxlength 100})
+      (dom/on "keydown" (e/fn [e]
+                          (when (= "Enter" (.-key e))
+                            (when-some [v (empty->nil (.substr (.. e -target -value) 0 100))]
+                              (dom/style {:background-color "yellow"}) ; loading
+                              (e/server
+                                (swap! !msgs #(cons {::username username ::msg v}
+                                                (take 9 %))))
+                              (set! (.-value dom/node) ""))))))))
 
 (e/defn ChatExtended []
   (e/client

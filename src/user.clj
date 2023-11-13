@@ -2,6 +2,8 @@
   ;; For fastest REPL startup, no heavy deps here, REPL conveniences only
   ;; (Clojure has to compile all this stuff on startup)
   (:require [missionary.core :as m]
+            [hyperfiddle.electric :as e]
+            [user-main]
             hyperfiddle.rcf))
 
 ; lazy load dev stuff - for faster REPL startup and cleaner dev classpath
@@ -9,7 +11,8 @@
 (def shadow-watch (delay @(requiring-resolve 'shadow.cljs.devtools.api/watch)))
 (def shadow-compile (delay @(requiring-resolve 'shadow.cljs.devtools.api/compile)))
 (def shadow-release (delay @(requiring-resolve 'shadow.cljs.devtools.api/release)))
-(def start-electric-server! (delay @(requiring-resolve 'electric-server-java8-jetty9/start-server!)))
+(def start-electric-server! (delay (partial @(requiring-resolve 'electric-server-java8-jetty9/start-server!)
+                                     (e/boot-server user-main/Main))))
 (def rcf-enable! (delay @(requiring-resolve 'hyperfiddle.rcf/enable!)))
 
 ; Server-side Electric userland code is lazy loaded by the shadow build.

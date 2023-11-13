@@ -8,14 +8,15 @@
 (defn update-board [board pos] (update board pos #(case % 0 1, 1 2, 2 0)))
 
 (e/defn Button [offset]
-  (ui/button (e/fn []
-               (e/server
-                 (swap! !x update-board offset)))
-    (dom/text
-      (case (e/server (nth x offset))
-        2 "x"
-        1 "o"
-        0 "-"))))
+  (e/client
+    (ui/button (e/fn []
+                 (e/server
+                   (swap! !x update-board offset)))
+      (dom/text
+        (case (e/server (nth x offset))
+          2 "x"
+          1 "o"
+          0 "-")))))
 
 (e/defn TicTacToe []
   (e/client

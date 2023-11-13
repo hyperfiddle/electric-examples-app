@@ -1,9 +1,9 @@
-(ns ^:dev/always user ; rebuild everything when any file changes. Will fix
+(ns user
   (:require hyperfiddle.electric
             hyperfiddle.rcf
             user-main))
 
-(def electric-main (hyperfiddle.electric/boot (user-main/Main.)))
+(def electric-main (hyperfiddle.electric/boot-client user-main/Main))
 (defonce reactor nil)
 
 (defn ^:dev/after-load ^:export start! []
