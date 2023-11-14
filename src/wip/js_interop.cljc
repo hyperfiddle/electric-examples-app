@@ -4,7 +4,7 @@
             [hyperfiddle.electric-ui4 :as ui]
             [hyperfiddle.history :as history]))
 
-(e/defn QRCode []
+(e/defn QRCodeApp []
   (e/client
     (let [value  (or (::value history/route) (str js/window.location.origin))
           !ready (atom false)]
