@@ -16,11 +16,11 @@
         (do
           (ui/input value (e/fn [value] (history/swap-route! assoc ::value value)))
           (dom/div
-            (let [qrcode (js/QRCode. dom/node (clj->js {:width        128
-                                                        :height       128
-                                                        :colorDark    "#000000"
-                                                        :colorLight   "#ffffff"
-                                                        :correctLevel js/QRCode.CorrectLevel.H}))]
+            (let [^js qrcode (js/QRCode. dom/node (clj->js {:width        128
+                                                            :height       128
+                                                            :colorDark    "#000000"
+                                                            :colorLight   "#ffffff"
+                                                            :correctLevel js/QRCode.CorrectLevel.H}))]
               ((fn [value]
                  (.clear qrcode)
                  (.makeCode qrcode value))
