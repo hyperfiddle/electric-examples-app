@@ -40,9 +40,9 @@
 (e/defn ChatExtended []
   (e/client
     (let [session-id 
-          (e/server (get-in e/*http-request* [:headers "sec-websocket-key"]))
+          (e/server (get-in e/http-request [:headers "sec-websocket-key"]))
           username 
-          (e/server (get-in e/*http-request* [:cookies "username" :value]))]
+          (e/server (get-in e/http-request [:cookies "username" :value]))]
       (if-not (some? username)
         (dom/div
           (dom/text "Set login cookie here: ")

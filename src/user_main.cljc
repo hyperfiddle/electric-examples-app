@@ -274,11 +274,12 @@
   (path->route "") := nil
   )
 
-(e/defn Main []
-  (e/client
-    (binding [history/encode route->path
-              history/decode #(or (path->route %) [`user.demo-two-clocks/TwoClocks])]
-      (history/router (history/HTML5-History.)
-        (set! (.-title js/document) (str #_(clojure.string/capitalize) (some-> (identity history/route) first name) " – Electric Clojure"))
-        (binding [dom/node js/document.body]
-            (Examples.))))))
+(e/defn Main [ring-req]
+  (binding [e/http-request ring-req]
+    (e/client
+      (binding [history/encode route->path
+                history/decode #(or (path->route %) [`user.demo-two-clocks/TwoClocks])]
+        (history/router (history/HTML5-History.)
+          (set! (.-title js/document) (str #_(clojure.string/capitalize) (some-> (identity history/route) first name) " – Electric Clojure"))
+          (binding [dom/node js/document.body]
+            (Examples.)))))))
