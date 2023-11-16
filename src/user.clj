@@ -12,8 +12,7 @@
 (def shadow-compile (delay @(requiring-resolve 'shadow.cljs.devtools.api/compile)))
 (def shadow-release (delay @(requiring-resolve 'shadow.cljs.devtools.api/release)))
 (def start-electric-server! (delay (partial @(requiring-resolve 'electric-server-java8-jetty9/start-server!)
-                                     (fn [ring-req]
-                                       (e/boot-server (user-main/Main. ring-req))))))
+                                     (fn [ring-req] (e/boot-server user-main/Main ring-req)))))
 (def rcf-enable! (delay @(requiring-resolve 'hyperfiddle.rcf/enable!)))
 
 ; Server-side Electric userland code is lazy loaded by the shadow build.

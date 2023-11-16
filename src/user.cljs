@@ -3,7 +3,7 @@
             hyperfiddle.rcf
             user-main))
 
-(def electric-main (hyperfiddle.electric/boot-client (user-main/Main. nil)))
+(def electric-main (hyperfiddle.electric/boot-client user-main/Main nil))
 (defonce reactor nil)
 
 (defn ^:dev/after-load ^:export start! []
