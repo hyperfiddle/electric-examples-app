@@ -4,6 +4,7 @@ Live app: https://electric.hyperfiddle.net/
 
 
 ```
+$ git submodule update --init
 $ yarn                          # demos only - react interop, codemirror
 $ clj -A:dev -X user/main
 

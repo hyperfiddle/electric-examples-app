@@ -1,7 +1,7 @@
 {:paths ["src" "resources"]
  :deps {com.datomic/dev-local {:mvn/version "1.0.243"}
         com.google.guava/guava {:mvn/version "31.1-jre"} ; fix conflict - datomic cloud & shadow
-        com.hyperfiddle/electric {:mvn/version "v2-alpha-469-gb6d9865c"}
+        com.hyperfiddle/electric {:mvn/version "v2-alpha-428-g22937f75"}
         com.hyperfiddle/rcf {:mvn/version "20220926-202227"}
         datascript/datascript {:mvn/version "1.5.2"}
         com.datomic/peer {:mvn/version "1.0.6735"}
@@ -23,6 +23,8 @@
             {binaryage/devtools {:mvn/version "1.0.6"}
              com.clojure-goes-fast/clj-async-profiler {:mvn/version "1.1.1"}
              thheller/shadow-cljs {:mvn/version "2.22.10"}}
+            :override-deps
+            {com.hyperfiddle/electric {:local/root "vendors/electric"}}
             :jvm-opts
             ["-Xss2m" ; https://github.com/hyperfiddle/photon/issues/11
              "-XX:-OmitStackTraceInFastThrow" ;; RCF
