@@ -43,7 +43,8 @@
             wip.tracing
             user.demo-reagent-interop ; yarn
             wip.demo-stage-ui4 ; yarn
-            wip.js-interop))
+            wip.js-interop
+            wip.demo-ui-library))
 
 (e/defn NotFoundPage []
   (e/client (dom/h1 (dom/text "Page not found"))))
@@ -96,6 +97,7 @@
    ; ::demos/dennis-exception-leak wip.dennis-exception-leak/App2
 
    ;`wip.js-interop/QRCode wip.js-interop/QRCode
+   `wip.demo-ui-library/UILibrary wip.demo-ui-library/UILibrary
    })
 
 #?(:clj (defn resolve-var-or-ns [sym]

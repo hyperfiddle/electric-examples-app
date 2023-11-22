@@ -17,7 +17,9 @@
         reagent/reagent {:mvn/version "1.1.1"}
         markdown-clj/markdown-clj {:mvn/version "1.11.4"}
         nextjournal/clojure-mode {:git/url "https://github.com/nextjournal/clojure-mode"
-                                  :sha "ac038ebf6e5da09dd2b8a31609e9ff4a65e36852"}}
+                                  :sha "ac038ebf6e5da09dd2b8a31609e9ff4a65e36852"}
+        com.hyperfiddle/heroicons-electric {:mvn/version "9f20bff"
+                                            :exclusions [com.hyperfiddle/electric]}}
  :aliases {:dev
            {:extra-deps
             {binaryage/devtools {:mvn/version "1.0.6"}
