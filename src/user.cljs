@@ -1,13 +1,12 @@
 (ns user
   (:require hyperfiddle.electric
             hyperfiddle.rcf
-            user-main))
+            boot))
 
-(def electric-main (hyperfiddle.electric/boot-client user-main/Main nil))
 (defonce reactor nil)
 
 (defn ^:dev/after-load ^:export start! []
-  (set! reactor (electric-main
+  (set! reactor (boot/client
                  #(js/console.log "Reactor success:" %)
                  (fn [error]
                    (case (:hyperfiddle.electric/type (ex-data error))
