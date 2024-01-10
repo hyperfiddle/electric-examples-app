@@ -29,7 +29,7 @@
                       (when verbose "--verbose")
                       "--config-merge"
                       (pr-str {:compiler-options {:optimizations (if optimize :advanced :simple)}
-                               :closure-defines  {'hyperfiddle.electric-client/VERSION version}})]
+                               :closure-defines  {'hyperfiddle.electric-client/ELECTRIC_USER_VERSION version}})]
                   (remove nil?))]
     (apply println "Running:" command)
     (let [{:keys [exit out err]} (apply sh/sh command)]
